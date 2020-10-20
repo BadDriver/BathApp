@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "574558648138",
+    "firebase_url": "https://bath-app.firebaseio.com",
+    "project_id": "bath-app",
+    "storage_bucket": "bath-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574558648138:android:471b7801d0a712432173b3",
+        "android_client_info": {
+          "package_name": "com.example.bathreserve"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "574558648138-68s8et9d1docokggeg7nud17o6ekcf0q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-xBsZ0p_fiZrsoz4gwAWNms_LVy-9jpY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574558648138-68s8et9d1docokggeg7nud17o6ekcf0q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
