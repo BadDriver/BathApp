@@ -1,7 +1,6 @@
 package com.example.bathreserve;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,8 @@ import com.example.bathreserve.viewModels.LoginRegisterViewModel;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LogInFragment extends Fragment implements View.OnClickListener{
-    EditText emailLogInEditText, passwordLogInEditText;
-    Button submitLogInButton;
+    private EditText emailLogInEditText, passwordLogInEditText;
+    private Button submitLogInButton;
     private LoginRegisterViewModel loginRegisterViewModel;
 
     @Nullable
@@ -30,6 +29,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_log_in, container, false);
         loginRegisterViewModel = new ViewModelProvider(getActivity()).get(LoginRegisterViewModel.class);
         loadViewObjects(view);
+        submitLogInButton.setOnClickListener(this);
         return view;
     }
 
@@ -41,14 +41,13 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
 
     public void submitLogInButton(){
         loginRegisterViewModel.login(emailLogInEditText.getText().toString(), passwordLogInEditText.getText().toString());
-        updateUI();
+        showHomeFragment();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.buttonSubmitLogIn:
-                Log.d("pula", "pula");
                 submitLogInButton();
                 break;
         }
@@ -58,8 +57,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
      * Method used to go to home fragment after the user has registered
      * Also used to skip the registration fragment if the user is already logged in
      */
-    public void updateUI(){
-        Log.d("pula", "pula");
+    public void showHomeFragment(){
         loginRegisterViewModel.getUserLiveData().observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
@@ -67,7 +65,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
                     FragmentManager fragmentManager = getParentFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     HomeFragment homeFragment = new HomeFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, homeFragment, "homeFragment");
+                    fragmentTransaction.replace(R.id.frameLayout, homeFragment);
                     fragmentTransaction.commit();
                 }
             }
