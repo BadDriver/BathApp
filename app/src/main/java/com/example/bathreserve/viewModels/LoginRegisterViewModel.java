@@ -36,7 +36,7 @@ public class LoginRegisterViewModel extends AndroidViewModel {
             Toast.makeText(getApplication(), "Passwords don't match", Toast.LENGTH_LONG).show();
         }
         else{
-            authAppRepository.register(email, password);
+            authAppRepository.register(email, password, name);
         }
     }
 

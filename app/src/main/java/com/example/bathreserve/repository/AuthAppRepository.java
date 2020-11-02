@@ -8,11 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.bathreserve.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AuthAppRepository {
     private Application application;
@@ -40,7 +46,7 @@ public class AuthAppRepository {
         return loggedInLiveData;
     }
 
-    public void register(String email, String password) {
+    public void register(String email, String password, String name) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(ContextCompat.getMainExecutor(application.getApplicationContext()), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -48,6 +54,9 @@ public class AuthAppRepository {
                         if (task.isSuccessful()) {
                             userLiveData.postValue(firebaseAuth.getCurrentUser());
                             loggedInLiveData.postValue(true);
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference myRef = database.getReference("users");
+                            myRef.child(firebaseAuth.getCurrentUser().getUid()).setValue(new User(email, name));
                         } else {
                             Toast.makeText(application.getApplicationContext(), "Registration Failure: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
