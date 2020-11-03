@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigationReservations"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="Reservations" />
+    <item
+        android:id="@+id/navigationHouse"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="House" />
+    <item
+        android:id="@+id/navigationProfile"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="Profile" />
+</menu>
