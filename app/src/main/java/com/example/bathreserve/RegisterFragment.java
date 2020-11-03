@@ -70,8 +70,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 if(loggedIn){
                     FragmentManager fragmentManager = getParentFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    HomeFragment homeFragment = new HomeFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, homeFragment);
+                    NoHouseFragment noHouseFragment = new NoHouseFragment();
+                    fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);
                     fragmentTransaction.commit();
                 }
             }

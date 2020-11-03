@@ -12,20 +12,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
-public class HomeFragment extends Fragment implements View.OnClickListener {
-    private Button buttonAddHouse;
+public class NoHouseFragment extends Fragment implements View.OnClickListener {
+    private Button buttonAddHouse, buttonJoinHouse;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        final View view = inflater.inflate(R.layout.fragment_home_no_house, container, false);
         loadUI(view);
         buttonAddHouse.setOnClickListener(this);
+        buttonJoinHouse.setOnClickListener(this);
         return view;
     }
 
     private void loadUI(View view){
         buttonAddHouse = view.findViewById(R.id.buttonAddHouseFragment);
+        buttonJoinHouse = view.findViewById(R.id.buttonJoinHouseFragment);
     }
 
     private void addHouse(){
@@ -41,6 +43,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()){
             case R.id.buttonAddHouseFragment:
                 addHouse();
+                break;
+            case R.id.buttonJoinHouseFragment:
+                //
                 break;
         }
     }

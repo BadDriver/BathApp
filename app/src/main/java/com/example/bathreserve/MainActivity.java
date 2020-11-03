@@ -4,24 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.example.bathreserve.models.User;
+import com.example.bathreserve.repositories.HouseRepository;
+import com.example.bathreserve.viewModels.HouseViewModel;
+import com.example.bathreserve.viewModels.LoginRegisterViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private HouseViewModel houseViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         showRegisterFragment();
         navBarFragments();
+        houseViewModel = new ViewModelProvider(MainActivity.this).get(HouseViewModel.class);
     }
 
     public void showRegisterFragment(){
@@ -41,9 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 switch (item.getItemId()) {
                     case R.id.navigationReservations:
-                        HomeFragment homeFragment = new HomeFragment();
-                        fragmentTransaction.replace(R.id.frameLayout, homeFragment);
-                        fragmentTransaction.commit();
+                        showHome();
                         break;
                     case R.id.navigationHouse:
                         AddHouseFragment addHouseFragment = new AddHouseFragment();
@@ -57,6 +59,26 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 return true;
+            }
+        });
+    }
+
+    public void showHome(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        houseViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                //Toast.makeText(MainActivity.this, aBoolean.toString(), Toast.LENGTH_LONG).show();
+                if(!aBoolean){
+                    NoHouseFragment noHouseFragment = new NoHouseFragment();
+                    fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);
+                }
+                else{
+                    ReservationsFragment reservationsFragment = new ReservationsFragment();
+                    fragmentTransaction.replace(R.id.frameLayout, reservationsFragment);
+                }
+                fragmentTransaction.commit();
             }
         });
     }

@@ -3,11 +3,12 @@ package com.example.bathreserve.models;
 public class User {
     private String email;
     private String name;
+    private String house;
 
     public User(String email, String name) {
-
         this.email = email;
         this.name = name;
+        this.house = null;
     }
 
 
@@ -25,5 +26,13 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getHouse() {
+        return house;
+    }
+
+    public void setHouse(String house) {
+        this.house = house;
     }
 }

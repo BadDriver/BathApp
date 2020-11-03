@@ -64,8 +64,8 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
                 if(firebaseUser != null){
                     FragmentManager fragmentManager = getParentFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    HomeFragment homeFragment = new HomeFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, homeFragment);
+                    NoHouseFragment noHouseFragment = new NoHouseFragment();
+                    fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);
                     fragmentTransaction.commit();
                 }
             }
