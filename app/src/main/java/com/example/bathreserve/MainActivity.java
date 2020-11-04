@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.bathreserve.repositories.AccountRepository;
 import com.example.bathreserve.viewModels.AccountViewModel;
@@ -19,10 +20,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private AccountViewModel accountViewModel;
+    BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
         navBarFragments();
         accountViewModel = new ViewModelProvider(MainActivity.this).get(AccountViewModel.class);
         //if the user is logged in, it will go to showHomeFragment(), otherwise it will show the register fragment
@@ -30,9 +33,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
+                    bottomNavigationView.setVisibility(View.VISIBLE);
                     showHomeFragment();
                 }
                 else {
+                    bottomNavigationView.setVisibility(View.INVISIBLE);
                     showRegisterFragment();
                 }
             }
@@ -48,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void navBarFragments(){
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
