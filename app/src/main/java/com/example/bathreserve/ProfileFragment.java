@@ -41,11 +41,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     private void logOut(){
         accountViewModel.logOut();
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        RegisterFragment registerFragment = new RegisterFragment();
-        fragmentTransaction.replace(R.id.frameLayout, registerFragment);
-        fragmentTransaction.commit();
     }
 
     private void showUserName(){

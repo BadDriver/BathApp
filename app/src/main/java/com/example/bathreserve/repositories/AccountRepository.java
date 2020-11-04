@@ -43,6 +43,9 @@ public class AccountRepository {
             loggedInLiveData.postValue(true);
             checkUserOwnHouse();
         }
+        else{
+            loggedInLiveData.postValue(false);
+        }
     }
 
     /**Get information about the current FireBaseUser */
@@ -70,6 +73,7 @@ public class AccountRepository {
                         if (task.isSuccessful()) {
                             userLiveData.postValue(firebaseAuth.getCurrentUser());
                             loggedInLiveData.postValue(true);
+                            ownHouseLiveData.postValue(false);
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             DatabaseReference myRef = database.getReference("users");
                             myRef.child(firebaseAuth.getCurrentUser().getUid()).setValue(new User(email, name));
