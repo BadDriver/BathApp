@@ -34,6 +34,10 @@ public class AccountRepository {
         this.userLiveData = new MutableLiveData<>();
         this.loggedInLiveData = new MutableLiveData<>();
         this.ownHouseLiveData = new MutableLiveData<>();
+        /*
+        AccountRepository object is created only once when the app is started
+        so, here I check if the user is logged in; if he is logged in, it will check if he is part of a house
+         */
         if (firebaseAuth.getCurrentUser() != null) {
             userLiveData.postValue(firebaseAuth.getCurrentUser());
             loggedInLiveData.postValue(true);
@@ -42,16 +46,23 @@ public class AccountRepository {
         }
     }
 
-    //registration, login, logout
-
+    /**Get information about the current FireBaseUser */
     public MutableLiveData<FirebaseUser> getUserLiveData() {
         return userLiveData;
     }
 
+    /**Used to check if a user is logged in */
     public MutableLiveData<Boolean> getLoggedInLiveData() {
         return loggedInLiveData;
     }
 
+    /**Used to check if the user owns a house */
+    public MutableLiveData<Boolean> getOwnHouseLiveData() {
+        return ownHouseLiveData;
+    }
+
+    /**After a user has registered, it will give that FirebaseUser object to userLiveData
+     * and loggedInLiveData will be switched to true*/
     public void register(String email, String password, String name) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(ContextCompat.getMainExecutor(application.getApplicationContext()), new OnCompleteListener<AuthResult>() {
@@ -70,6 +81,8 @@ public class AccountRepository {
                 });
     }
 
+    /**After the user has logged in, it will give that FirebaseUser object to userLiveData
+     * and loggedInLiveData will be switched to true; it will check if the user owns a house */
     public void login(String email, String password) {
         ownHouseLiveData.postValue(false);
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -92,7 +105,7 @@ public class AccountRepository {
         firebaseAuth.signOut();
     }
 
-    //house
+    /**Check if the logged in user owns a house; called every time the user opens the app or after he logs in */
     public void checkUserOwnHouse(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
@@ -113,9 +126,5 @@ public class AccountRepository {
             }
         };
         myRef.addValueEventListener(valueEventListener);
-    }
-
-    public MutableLiveData<Boolean> getOwnHouseLiveData() {
-        return ownHouseLiveData;
     }
 }

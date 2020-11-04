@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         navBarFragments();
         accountViewModel = new ViewModelProvider(MainActivity.this).get(AccountViewModel.class);
+        //if the user is logged in, it will go to showHomeFragment(), otherwise it will show the register fragment
         accountViewModel.getLoggedInLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Will show reservation fragment or no house fragment, depending if the current user is part of a house
+     */
     public void showHomeFragment(){
         accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
             @Override

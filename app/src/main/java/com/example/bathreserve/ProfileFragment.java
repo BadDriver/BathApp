@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     }
 
     private void showUserName(){
-        accountViewModel.getUserLiveData().observe(this, new Observer<FirebaseUser>() {
+        accountViewModel.getUserLiveData().observe(getViewLifecycleOwner(), new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 textViewEmail.setText(firebaseUser.getEmail());

@@ -55,8 +55,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
     }
 
     /**
-     * Method used to go to home fragment after the user has registered
-     * Also used to skip the registration fragment if the user is already logged in
+     * Will show reservation fragment or no house fragment, depending if the current user is part of a house
      */
     public void showHomeFragment(){
         accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {

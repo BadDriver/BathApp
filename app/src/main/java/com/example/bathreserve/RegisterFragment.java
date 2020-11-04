@@ -32,7 +32,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         loadViewObjects(view);
         submitRegisterButton.setOnClickListener(this);
         logInRegisterButton.setOnClickListener(this);
-        showHomeFragment();
         return view;
     }
 
@@ -57,25 +56,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         repeatPasswordRegisterEditText = view.findViewById(R.id.editTextPasswordRepeatRegister);
         submitRegisterButton = view.findViewById(R.id.buttonSubmitRegister);
         logInRegisterButton = view.findViewById(R.id.buttonLogInRegister);
-    }
-
-    /**
-     * Method used to go to home fragment after the user has registered
-     * Also used to skip the registration fragment if the user is already logged in
-     */
-    public void showHomeFragment(){
-        accountViewModel.getLoggedInLiveData().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean loggedIn) {
-                if(loggedIn){
-                    FragmentManager fragmentManager = getParentFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    NoHouseFragment noHouseFragment = new NoHouseFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);
-                    fragmentTransaction.commit();
-                }
-            }
-        });
     }
 
     @Override
