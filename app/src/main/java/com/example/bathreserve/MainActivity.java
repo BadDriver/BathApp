@@ -20,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private AccountViewModel accountViewModel;
-    BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +63,7 @@ public class MainActivity extends AppCompatActivity {
                         showHomeFragment();
                         break;
                     case R.id.navigationHouse:
-                        AddHouseFragment addHouseFragment = new AddHouseFragment();
-                        fragmentTransaction.replace(R.id.frameLayout, addHouseFragment);
-                        fragmentTransaction.commit();
+                        showHouseInfoFragment();
                         break;
                     case R.id.navigationProfile:
                         ProfileFragment profileFragment = new ProfileFragment();
@@ -98,5 +96,24 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
         });
+    }
+
+    public void showHouseInfoFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(!aBoolean){
+                    AddHouseFragment addHouseFragment = new AddHouseFragment();
+                    fragmentTransaction.replace(R.id.frameLayout, addHouseFragment);
+                }
+                else{
+                    HouseInfoFragment houseInfoFragment = new HouseInfoFragment();
+                    fragmentTransaction.replace(R.id.frameLayout, houseInfoFragment);
+                }
+            }
+        });
+        fragmentTransaction.commit();
     }
 }
