@@ -41,7 +41,6 @@ public class AccountRepository {
         if (firebaseAuth.getCurrentUser() != null) {
             userLiveData.postValue(firebaseAuth.getCurrentUser());
             loggedInLiveData.postValue(true);
-            ownHouseLiveData.postValue(false);
             checkUserOwnHouse();
         }
     }
@@ -84,7 +83,6 @@ public class AccountRepository {
     /**After the user has logged in, it will give that FirebaseUser object to userLiveData
      * and loggedInLiveData will be switched to true; it will check if the user owns a house */
     public void login(String email, String password) {
-        ownHouseLiveData.postValue(false);
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(ContextCompat.getMainExecutor(application.getApplicationContext()), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -110,14 +108,19 @@ public class AccountRepository {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
         ValueEventListener valueEventListener = new ValueEventListener() {
+            boolean found = false;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())){
                         if(dataSnapshot.child("house").getValue() != null){
                             ownHouseLiveData.postValue(true);
+                            found = true;
                         }
                     }
+                }
+                if(!found){
+                    ownHouseLiveData.postValue(false);
                 }
             }
             @Override

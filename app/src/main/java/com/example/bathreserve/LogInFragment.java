@@ -1,5 +1,6 @@
 package com.example.bathreserve;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +43,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
 
     public void submitLogInButton(){
         accountViewModel.login(emailLogInEditText.getText().toString(), passwordLogInEditText.getText().toString());
-        showHomeFragment();
     }
 
     @Override
@@ -52,27 +52,5 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
                 submitLogInButton();
                 break;
         }
-    }
-
-    /**
-     * Will show reservation fragment or no house fragment, depending if the current user is part of a house
-     */
-    public void showHomeFragment(){
-        accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                FragmentManager fragmentManager = getParentFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                if(!aBoolean){
-                    NoHouseFragment noHouseFragment = new NoHouseFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);
-                }
-                else{
-                    ReservationsFragment reservationsFragment = new ReservationsFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, reservationsFragment);
-                }
-                fragmentTransaction.commit();
-            }
-        });
     }
 }
