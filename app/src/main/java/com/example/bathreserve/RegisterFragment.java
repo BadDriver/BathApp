@@ -15,20 +15,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.bathreserve.viewModels.LoginRegisterViewModel;
+import com.example.bathreserve.viewModels.AccountViewModel;
 
 
 
 public class RegisterFragment extends Fragment implements View.OnClickListener {
     private EditText emailRegisterEditText, nameRegisterEditText, passwordRegisterEditText, repeatPasswordRegisterEditText;
     private Button submitRegisterButton, logInRegisterButton;
-    private LoginRegisterViewModel loginRegisterViewModel;
+    private AccountViewModel accountViewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
-        loginRegisterViewModel = new ViewModelProvider(getActivity()).get(LoginRegisterViewModel.class);
+        accountViewModel = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
         loadViewObjects(view);
         submitRegisterButton.setOnClickListener(this);
         logInRegisterButton.setOnClickListener(this);
@@ -37,7 +37,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     }
 
     public void submitRegisterButton(){
-        loginRegisterViewModel.register(emailRegisterEditText.getText().toString(), nameRegisterEditText.getText().toString(),
+        accountViewModel.register(emailRegisterEditText.getText().toString(), nameRegisterEditText.getText().toString(),
                 passwordRegisterEditText.getText().toString(), repeatPasswordRegisterEditText.getText().toString());
     }
 
@@ -64,7 +64,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
      * Also used to skip the registration fragment if the user is already logged in
      */
     public void showHomeFragment(){
-        loginRegisterViewModel.getLoggedInLiveData().observe(this, new Observer<Boolean>() {
+        accountViewModel.getLoggedInLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean loggedIn) {
                 if(loggedIn){

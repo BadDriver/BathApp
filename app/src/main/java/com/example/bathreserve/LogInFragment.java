@@ -1,6 +1,7 @@
 package com.example.bathreserve;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +16,19 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.bathreserve.viewModels.LoginRegisterViewModel;
+import com.example.bathreserve.viewModels.AccountViewModel;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LogInFragment extends Fragment implements View.OnClickListener{
     private EditText emailLogInEditText, passwordLogInEditText;
     private Button submitLogInButton;
-    private LoginRegisterViewModel loginRegisterViewModel;
+    private AccountViewModel accountViewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_log_in, container, false);
-        loginRegisterViewModel = new ViewModelProvider(getActivity()).get(LoginRegisterViewModel.class);
+        accountViewModel = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
         loadViewObjects(view);
         submitLogInButton.setOnClickListener(this);
         return view;
@@ -40,7 +41,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
     }
 
     public void submitLogInButton(){
-        loginRegisterViewModel.login(emailLogInEditText.getText().toString(), passwordLogInEditText.getText().toString());
+        accountViewModel.login(emailLogInEditText.getText().toString(), passwordLogInEditText.getText().toString());
         showHomeFragment();
     }
 
@@ -58,16 +59,20 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
      * Also used to skip the registration fragment if the user is already logged in
      */
     public void showHomeFragment(){
-        loginRegisterViewModel.getUserLiveData().observe(this, new Observer<FirebaseUser>() {
+        accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(FirebaseUser firebaseUser) {
-                if(firebaseUser != null){
-                    FragmentManager fragmentManager = getParentFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            public void onChanged(Boolean aBoolean) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                if(!aBoolean){
                     NoHouseFragment noHouseFragment = new NoHouseFragment();
                     fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);
-                    fragmentTransaction.commit();
                 }
+                else{
+                    ReservationsFragment reservationsFragment = new ReservationsFragment();
+                    fragmentTransaction.replace(R.id.frameLayout, reservationsFragment);
+                }
+                fragmentTransaction.commit();
             }
         });
     }

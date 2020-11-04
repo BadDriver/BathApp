@@ -7,24 +7,19 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.bathreserve.models.House;
-import com.example.bathreserve.repositories.HouseRepository;
+import com.example.bathreserve.repositories.AccountRepository;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class HouseViewModel extends AndroidViewModel {
     private FirebaseAuth firebaseAuth;
-    private HouseRepository houseRepository;
-    private MutableLiveData<Boolean> ownHouseLiveData;
+    private AccountRepository accountRepository;
+
     public HouseViewModel(@NonNull Application application) {
         super(application);
         this.firebaseAuth = FirebaseAuth.getInstance();
-        this.houseRepository = new HouseRepository(application);
-        ownHouseLiveData = houseRepository.getOwnHouseLiveData();
-        this.houseRepository.checkUserHouse();
+        this.accountRepository = new AccountRepository(application);
     }
 
     public void addHouse(String name){
@@ -37,7 +32,7 @@ public class HouseViewModel extends AndroidViewModel {
         myRef.child(firebaseAuth.getCurrentUser().getUid()).child("house").setValue(key);
     }
 
-    public MutableLiveData<Boolean> getOwnHouseLiveData() {
-        return ownHouseLiveData;
-    }
+
+
+
 }

@@ -15,19 +15,19 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.bathreserve.viewModels.LoginRegisterViewModel;
+import com.example.bathreserve.viewModels.AccountViewModel;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
     private TextView textViewEmail;
     private Button buttonLogOut;
-    private LoginRegisterViewModel loginRegisterViewModel;
+    private AccountViewModel accountViewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        loginRegisterViewModel = new ViewModelProvider(getActivity()).get(LoginRegisterViewModel.class);
+        accountViewModel = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
         loadUI(view);
         showUserName();
         buttonLogOut.setOnClickListener(this);
@@ -40,7 +40,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     }
 
     private void logOut(){
-        loginRegisterViewModel.logOut();
+        accountViewModel.logOut();
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         RegisterFragment registerFragment = new RegisterFragment();
@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     }
 
     private void showUserName(){
-        loginRegisterViewModel.getUserLiveData().observe(this, new Observer<FirebaseUser>() {
+        accountViewModel.getUserLiveData().observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 textViewEmail.setText(firebaseUser.getEmail());

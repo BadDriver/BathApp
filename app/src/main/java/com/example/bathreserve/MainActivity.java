@@ -10,22 +10,31 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.bathreserve.repositories.HouseRepository;
+import com.example.bathreserve.repositories.AccountRepository;
+import com.example.bathreserve.viewModels.AccountViewModel;
 import com.example.bathreserve.viewModels.HouseViewModel;
-import com.example.bathreserve.viewModels.LoginRegisterViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    private HouseViewModel houseViewModel;
+    private AccountViewModel accountViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showRegisterFragment();
         navBarFragments();
-        houseViewModel = new ViewModelProvider(MainActivity.this).get(HouseViewModel.class);
+        accountViewModel = new ViewModelProvider(MainActivity.this).get(AccountViewModel.class);
+        accountViewModel.getLoggedInLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    showHomeFragment();
+                }
+                else {
+                    showRegisterFragment();
+                }
+            }
+        });
     }
 
     public void showRegisterFragment(){
@@ -45,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 switch (item.getItemId()) {
                     case R.id.navigationReservations:
-                        showHome();
+                        showHomeFragment();
                         break;
                     case R.id.navigationHouse:
                         AddHouseFragment addHouseFragment = new AddHouseFragment();
@@ -63,13 +72,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void showHome(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        houseViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
+    public void showHomeFragment(){
+        accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                //Toast.makeText(MainActivity.this, aBoolean.toString(), Toast.LENGTH_LONG).show();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 if(!aBoolean){
                     NoHouseFragment noHouseFragment = new NoHouseFragment();
                     fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);

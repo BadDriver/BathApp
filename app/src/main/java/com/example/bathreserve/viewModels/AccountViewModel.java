@@ -8,23 +8,37 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 
-import com.example.bathreserve.repositories.AuthRepository;
+import com.example.bathreserve.repositories.AccountRepository;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginRegisterViewModel extends AndroidViewModel {
-    private AuthRepository authRepository;
+public class AccountViewModel extends AndroidViewModel {
+    private AccountRepository accountRepository;
     private MutableLiveData<FirebaseUser> userLiveData;
     private MutableLiveData<Boolean> loggedInLiveData;
+    private MutableLiveData<Boolean> ownHouseLiveData;
 
-    public LoginRegisterViewModel(@NonNull Application application) {
+    public AccountViewModel(@NonNull Application application) {
         super(application);
-        authRepository = new AuthRepository(application);
-        userLiveData = authRepository.getUserLiveData();
-        loggedInLiveData = authRepository.getLoggedInLiveData();
+        this.accountRepository = new AccountRepository(application);
+        this.userLiveData = accountRepository.getUserLiveData();
+        this.loggedInLiveData = accountRepository.getLoggedInLiveData();
+        this.ownHouseLiveData = accountRepository.getOwnHouseLiveData();
+    }
+
+    public MutableLiveData<FirebaseUser> getUserLiveData() {
+        return userLiveData;
+    }
+
+    public MutableLiveData<Boolean> getLoggedInLiveData() {
+        return loggedInLiveData;
+    }
+
+    public MutableLiveData<Boolean> getOwnHouseLiveData() {
+        return ownHouseLiveData;
     }
 
     public void login(String email, String password) {
-        authRepository.login(email, password);
+        accountRepository.login(email, password);
     }
 
     public void register(String email, String name, String password, String repeatPassword) {
@@ -36,19 +50,11 @@ public class LoginRegisterViewModel extends AndroidViewModel {
             Toast.makeText(getApplication(), "Passwords don't match", Toast.LENGTH_LONG).show();
         }
         else{
-            authRepository.register(email, password, name);
+            accountRepository.register(email, password, name);
         }
     }
 
     public void logOut() {
-        authRepository.logOut();
-    }
-
-    public MutableLiveData<FirebaseUser> getUserLiveData() {
-        return userLiveData;
-    }
-
-    public MutableLiveData<Boolean> getLoggedInLiveData() {
-        return loggedInLiveData;
+        accountRepository.logOut();
     }
 }

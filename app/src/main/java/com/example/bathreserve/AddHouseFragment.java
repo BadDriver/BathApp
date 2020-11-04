@@ -12,12 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.bathreserve.models.User;
 import com.example.bathreserve.viewModels.HouseViewModel;
-import com.example.bathreserve.viewModels.LoginRegisterViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddHouseFragment extends Fragment implements View.OnClickListener {
     private EditText editTextHouseNameAdd;
