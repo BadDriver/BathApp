@@ -38,7 +38,12 @@ public class AccountViewModel extends AndroidViewModel {
     }
 
     public void login(String email, String password) {
-        accountRepository.login(email, password);
+        if(email.trim().isEmpty() || password.trim().isEmpty()){
+            Toast.makeText(getApplication(), "Please, complete all fields", Toast.LENGTH_LONG).show();
+        }
+        else{
+            accountRepository.login(email, password);
+        }
     }
 
     public void register(String email, String name, String password, String repeatPassword) {
