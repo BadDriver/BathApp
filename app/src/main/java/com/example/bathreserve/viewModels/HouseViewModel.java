@@ -24,4 +24,8 @@ public class HouseViewModel extends AndroidViewModel {
     public void addHouse(String name){
         houseRepository.addHouse(name);
     }
+
+    public void joinHouse(String code) {
+        houseRepository.joinHouse(code);
+    }
 }
