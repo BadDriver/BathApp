@@ -17,9 +17,15 @@ import java.util.ArrayList;
 
 public class HouseRepository {
     private FirebaseAuth firebaseAuth;
+    private MutableLiveData<String> houseNameLiveData;
 
     public HouseRepository() {
         this.firebaseAuth = FirebaseAuth.getInstance();
+        houseNameLiveData = new MutableLiveData<>();
+    }
+
+    public MutableLiveData<String> getHouseNameLiveData() {
+        return houseNameLiveData;
     }
 
     /**Adds a house with a choosen name and the logged in user as a part of it */
@@ -59,5 +65,44 @@ public class HouseRepository {
         myRef.addListenerForSingleValueEvent(valueEventListener);
         DatabaseReference userRef = database.getReference("users");
         userRef.child(firebaseAuth.getCurrentUser().getUid()).child("house").setValue(code);
+    }
+
+    public void getHouseName(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String houseId;
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())){
+                        houseId = dataSnapshot.child("house").getValue().toString();
+                        DatabaseReference houseRef = database.getReference("houses");
+                        String finalHouseId = houseId;
+                        ValueEventListener valueEventListener = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Log.d("pla", finalHouseId);
+                                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                    if(dataSnapshot.getKey().equals(finalHouseId)){
+                                        houseNameLiveData.postValue(dataSnapshot.child("name").getValue().toString());
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        };
+                        houseRef.addListenerForSingleValueEvent(valueEventListener);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        myRef.addListenerForSingleValueEvent(valueEventListener);
     }
 }

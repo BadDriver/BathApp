@@ -15,10 +15,17 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class HouseViewModel extends AndroidViewModel {
     private HouseRepository houseRepository;
+    private  MutableLiveData<String> houseNameLiveData;
 
     public HouseViewModel(@NonNull Application application) {
         super(application);
         this.houseRepository = new HouseRepository();
+        this.houseNameLiveData = houseRepository.getHouseNameLiveData();
+
+    }
+
+    public MutableLiveData<String> getHouseNameLiveData() {
+        return houseNameLiveData;
     }
 
     public void addHouse(String name){
@@ -27,5 +34,9 @@ public class HouseViewModel extends AndroidViewModel {
 
     public void joinHouse(String code) {
         houseRepository.joinHouse(code);
+    }
+
+    public void getHouseName(){
+        houseRepository.getHouseName();
     }
 }
