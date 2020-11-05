@@ -3,6 +3,7 @@ package com.example.bathreserve.repositories;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.bathreserve.models.House;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,31 +20,14 @@ public class HouseRepository {
         this.firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    //house
-    public void checkUserOwnHouse(){
-        ownHouseLiveData.postValue(false);
+    /**Adds a house with a choosen name and the logged in user as a part of it */
+    public void addHouse(String name){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())){
-                        if(dataSnapshot.child("house").getValue() != null){
-                            ownHouseLiveData.postValue(true);
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        myRef.addValueEventListener(valueEventListener);
+        DatabaseReference myRef = database.getReference("houses");
+        String key = myRef.push().getKey();
+        myRef.child(key).setValue(new House(name, firebaseAuth.getCurrentUser().getUid()));
+        myRef = database.getReference("users");
+        myRef.child(firebaseAuth.getCurrentUser().getUid()).child("house").setValue(key);
     }
 
-    public MutableLiveData<Boolean> getOwnHouseLiveData() {
-        return ownHouseLiveData;
-    }
 }
