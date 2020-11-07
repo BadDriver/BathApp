@@ -1,6 +1,7 @@
 package com.example.bathreserve;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,33 +21,38 @@ import com.example.bathreserve.viewModels.AccountViewModel;
 import com.example.bathreserve.viewModels.HouseViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HouseInfoFragment extends Fragment implements View.OnClickListener, HouseUserListRecyclerViewAdapter.ItemClickListener {
-    HouseUserListRecyclerViewAdapter adapter;
-    TextView textViewHouseInfoName;
-    HouseViewModel houseViewModel;
+    private HouseUserListRecyclerViewAdapter adapter;
+    private TextView textViewHouseInfoName;
+    private HouseViewModel houseViewModel;
+    private RecyclerView recyclerView;
+    private List<String> userList;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_house_info, container, false);
+        houseViewModel = new ViewModelProvider(getActivity()).get(HouseViewModel.class);
+        getHouseName();
+        getUserListHouse();
+        loadViewObjects(view);
+        return view;
+    }
 
-        // data to populate the RecyclerView with
-        ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
-
+    private void loadViewObjects(View view){
+        textViewHouseInfoName = view.findViewById(R.id.textViewHouseInfoName);
+        userList = new ArrayList<>();
         // set up the RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.recylerViewHouseUsers);
+        recyclerView = view.findViewById(R.id.recylerViewHouseUsers);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new HouseUserListRecyclerViewAdapter(getContext(), animalNames);
+        adapter = new HouseUserListRecyclerViewAdapter(getContext(), userList);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+    }
 
-        textViewHouseInfoName = view.findViewById(R.id.textViewHouseInfoName);
-        houseViewModel = new ViewModelProvider(getActivity()).get(HouseViewModel.class);
+    private void getHouseName(){
         houseViewModel.getHouseName();
         houseViewModel.getHouseNameLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -54,8 +60,19 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
                 textViewHouseInfoName.setText(s);
             }
         });
+    }
 
-        return view;
+    public void getUserListHouse(){
+        houseViewModel.getUserListHouse();
+        houseViewModel.getUsersListHouseLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> strings) {
+                for(String s : strings){
+                    userList.add(s);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
