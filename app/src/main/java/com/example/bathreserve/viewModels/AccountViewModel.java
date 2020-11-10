@@ -16,6 +16,7 @@ public class AccountViewModel extends AndroidViewModel {
     private MutableLiveData<FirebaseUser> userLiveData;
     private MutableLiveData<Boolean> loggedInLiveData;
     private MutableLiveData<Boolean> ownHouseLiveData;
+    private boolean ownHouse;
 
     public AccountViewModel(@NonNull Application application) {
         super(application);
@@ -35,6 +36,14 @@ public class AccountViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> getOwnHouseLiveData() {
         return ownHouseLiveData;
+    }
+
+    public boolean isOwnHouse() {
+        return ownHouse;
+    }
+
+    public void setOwnHouse(boolean ownHouse) {
+        this.ownHouse = ownHouse;
     }
 
     public void login(String email, String password) {

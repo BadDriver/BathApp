@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -28,18 +29,22 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         navBarFragments();
         accountViewModel = new ViewModelProvider(MainActivity.this).get(AccountViewModel.class);
-        //if the user is logged in, it will go to showHomeFragment(), otherwise it will show the register fragment
+        //if the user is logged in, it will go to showHomeFragment()
         accountViewModel.getLoggedInLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    bottomNavigationView.setVisibility(View.VISIBLE);
-                    showHomeFragment();
-                }
-                else {
+                if(!aBoolean){
                     bottomNavigationView.setVisibility(View.INVISIBLE);
                     showRegisterFragment();
                 }
+            }
+        });
+        //check if the user is part of a house or not
+        accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                accountViewModel.setOwnHouse(aBoolean);
+                showHomeFragment();
             }
         });
     }
@@ -80,40 +85,30 @@ public class MainActivity extends AppCompatActivity {
      * Will show reservation fragment or no house fragment, depending if the current user is part of a house
      */
     public void showHomeFragment(){
-        accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                if(!aBoolean){
-                    NoHouseFragment noHouseFragment = new NoHouseFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);
-                }
-                else{
-                    ReservationsFragment reservationsFragment = new ReservationsFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, reservationsFragment);
-                }
-                fragmentTransaction.commit();
-            }
-        });
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if(accountViewModel.isOwnHouse()){
+            ReservationsFragment reservationsFragment = new ReservationsFragment();
+            fragmentTransaction.replace(R.id.frameLayout, reservationsFragment);
+        }
+        else{
+            NoHouseFragment noHouseFragment = new NoHouseFragment();
+            fragmentTransaction.replace(R.id.frameLayout, noHouseFragment);
+        }
+        fragmentTransaction.commit();
     }
 
     public void showHouseInfoFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        accountViewModel.getOwnHouseLiveData().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(!aBoolean){
-                    AddHouseFragment addHouseFragment = new AddHouseFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, addHouseFragment);
-                }
-                else{
-                    HouseInfoFragment houseInfoFragment = new HouseInfoFragment();
-                    fragmentTransaction.replace(R.id.frameLayout, houseInfoFragment);
-                }
-            }
-        });
+        if(accountViewModel.isOwnHouse()){
+            HouseInfoFragment houseInfoFragment = new HouseInfoFragment();
+            fragmentTransaction.replace(R.id.frameLayout, houseInfoFragment);
+        }
+        else{
+            AddHouseFragment addHouseFragment = new AddHouseFragment();
+            fragmentTransaction.replace(R.id.frameLayout, addHouseFragment);
+        }
         fragmentTransaction.commit();
     }
 }

@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bathreserve.adapters.HouseUserListRecyclerViewAdapter;
-import com.example.bathreserve.viewModels.AccountViewModel;
 import com.example.bathreserve.viewModels.HouseViewModel;
 
 import java.util.ArrayList;
@@ -35,25 +34,21 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_house_info, container, false);
         houseViewModel = new ViewModelProvider(getActivity()).get(HouseViewModel.class);
-        getHouseName();
-        getUserListHouse();
         loadViewObjects(view);
+        houseViewModel.getHouseInfo();
+        getHouseName();
+        getUserIdList();
         return view;
     }
 
     private void loadViewObjects(View view){
         textViewHouseInfoName = view.findViewById(R.id.textViewHouseInfoName);
-        userList = new ArrayList<>();
         // set up the RecyclerView
         recyclerView = view.findViewById(R.id.recylerViewHouseUsers);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new HouseUserListRecyclerViewAdapter(getContext(), userList);
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
     }
 
     private void getHouseName(){
-        houseViewModel.getHouseName();
         houseViewModel.getHouseNameLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -62,11 +57,27 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         });
     }
 
-    public void getUserListHouse(){
-        houseViewModel.getUserListHouse();
-        houseViewModel.getUsersListHouseLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+
+    private void getUserIdList(){
+        houseViewModel.getUsersIdListHouseLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> strings) {
+                getUserListHouse();
+            }
+        });
+    }
+
+    /**Called only after the list of users id from the house was filled from getUserIdList(), because the names are searched based on id */
+    public void getUserListHouse(){
+        userList = new ArrayList<>();
+        adapter = new HouseUserListRecyclerViewAdapter(getContext(), userList);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
+        houseViewModel.getUserNameListHouse();
+        houseViewModel.getUsersNameListLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> strings) {
+                userList.clear();
                 for(String s : strings){
                     userList.add(s);
                 }
