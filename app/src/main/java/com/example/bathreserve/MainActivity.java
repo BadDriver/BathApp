@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
                     bottomNavigationView.setVisibility(View.INVISIBLE);
                     showRegisterFragment();
                 }
+                else{
+                    bottomNavigationView.setVisibility(View.VISIBLE);
+                }
             }
         });
         //check if the user is part of a house or not
