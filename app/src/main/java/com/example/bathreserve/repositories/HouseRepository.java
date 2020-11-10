@@ -19,23 +19,17 @@ import java.util.List;
 public class HouseRepository {
     private FirebaseAuth firebaseAuth;
     private MutableLiveData<String> houseNameLiveData;
-    private MutableLiveData<List<String>> usersIdListHouseLiveData;
     private ArrayList<String> usersListId;
     private MutableLiveData<List<String>> usersNameListLiveData;
 
     public HouseRepository() {
         this.firebaseAuth = FirebaseAuth.getInstance();
         this.houseNameLiveData = new MutableLiveData<>();
-        this.usersIdListHouseLiveData = new MutableLiveData<>();
         this.usersNameListLiveData = new MutableLiveData<>();
     }
 
     public MutableLiveData<String> getHouseNameLiveData() {
         return houseNameLiveData;
-    }
-
-    public MutableLiveData<List<String>> getUsersIdListHouseLiveData() {
-        return usersIdListHouseLiveData;
     }
 
     public MutableLiveData<List<String>> getUsersNameListLiveData() {
@@ -94,36 +88,29 @@ public class HouseRepository {
                         usersListId.add(dataSnapshotUsers.getValue().toString());
                     }
                     if(usersListId.contains(firebaseAuth.getCurrentUser().getUid())){
-                        usersIdListHouseLiveData.postValue(usersListId);
                         houseNameLiveData.postValue(dataSnapshot.child("name").getValue().toString());
+                        DatabaseReference databaseReferenceUserNames = database.getReference("users");
+                        List<String> tempList = new ArrayList<>();
+                        ValueEventListener valueEventListenerUserName = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                    if(usersListId.contains(dataSnapshot.getKey())){
+                                        tempList.add(dataSnapshot.child("name").getValue().toString());
+                                    }
+                                }
+                                usersNameListLiveData.postValue(tempList);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        };
+                        databaseReferenceUserNames.addListenerForSingleValueEvent(valueEventListenerUserName);
                         break;
                     }
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        databaseReference.addListenerForSingleValueEvent(valueEventListener);
-    }
-
-    /**This is called after the list of user's id of the specific house is filled from getHouseInfo()
-     */
-    public void getUserNameListHouse(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = database.getReference("users");
-        List<String> tempList = new ArrayList<>();
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    if(usersListId.contains(dataSnapshot.getKey())){
-                        tempList.add(dataSnapshot.child("name").getValue().toString());
-                    }
-                }
-                usersNameListLiveData.postValue(tempList);
             }
 
             @Override

@@ -9,29 +9,23 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.bathreserve.repositories.HouseRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HouseViewModel extends AndroidViewModel {
     private HouseRepository houseRepository;
-    private  MutableLiveData<String> houseNameLiveData;
-    private MutableLiveData<List<String>> usersIdListHouseLiveData;
+    private MutableLiveData<String> houseNameLiveData;
     private MutableLiveData<List<String>> usersNameListLiveData;
 
     public HouseViewModel(@NonNull Application application) {
         super(application);
         this.houseRepository = new HouseRepository();
         this.houseNameLiveData = houseRepository.getHouseNameLiveData();
-        this.usersIdListHouseLiveData = houseRepository.getUsersIdListHouseLiveData();
         this.usersNameListLiveData = houseRepository.getUsersNameListLiveData();
-
     }
 
     public MutableLiveData<String> getHouseNameLiveData() {
         return houseNameLiveData;
-    }
-
-    public MutableLiveData<List<String>> getUsersIdListHouseLiveData() {
-        return usersIdListHouseLiveData;
     }
 
     public MutableLiveData<List<String>> getUsersNameListLiveData() {
@@ -48,9 +42,5 @@ public class HouseViewModel extends AndroidViewModel {
 
     public void getHouseInfo(){
         houseRepository.getHouseInfo();
-    }
-
-    public void getUserNameListHouse(){
-        houseRepository.getUserNameListHouse();
     }
 }

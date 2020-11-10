@@ -1,7 +1,6 @@
 package com.example.bathreserve;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         loadViewObjects(view);
         houseViewModel.getHouseInfo();
         getHouseName();
-        getUserIdList();
+        getUserListNames();
         return view;
     }
 
@@ -57,23 +56,11 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         });
     }
 
-
-    private void getUserIdList(){
-        houseViewModel.getUsersIdListHouseLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> strings) {
-                getUserListHouse();
-            }
-        });
-    }
-
-    /**Called only after the list of users id from the house was filled from getUserIdList(), because the names are searched based on id */
-    public void getUserListHouse(){
+    private void getUserListNames(){
         userList = new ArrayList<>();
         adapter = new HouseUserListRecyclerViewAdapter(getContext(), userList);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-        houseViewModel.getUserNameListHouse();
         houseViewModel.getUsersNameListLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> strings) {
