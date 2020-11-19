@@ -33,8 +33,8 @@ public class HouseUserListRecyclerViewAdapter extends RecyclerView.Adapter<House
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.myTextView.setText(animal);
+        String user = mData.get(position);
+        holder.myTextView.setText(user);
     }
 
     // total number of rows
