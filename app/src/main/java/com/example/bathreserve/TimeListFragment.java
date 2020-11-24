@@ -30,9 +30,10 @@ import java.util.Random;
 public class TimeListFragment extends Fragment implements TimeReservationListRecylerViewAdapter.ItemClickListener{
     private TimeReservationListRecylerViewAdapter adapter;
     private RecyclerView recyclerViewTimeList;
-    public static final String ARG_OBJECT = "object";
-    private TextView textView;
+    public static final String ARG_OBJECT_ARRAY = "array";
+    public static final String ARG_OBJECT_DAY = "day";
     private int receivedInt;
+    private String dayOfWeek;
     private ReservationViewModel reservationViewModel;
     private ArrayList<Reservation> reservations;
     private ArrayList<Integer> reservationsHourFull;
@@ -46,7 +47,9 @@ public class TimeListFragment extends Fragment implements TimeReservationListRec
         reservationsHourHalf = new ArrayList<>();
         reservationViewModel = new ViewModelProvider(getActivity()).get(ReservationViewModel.class);
         Bundle args = getArguments();
-        reservations = (ArrayList<Reservation>) args.getSerializable(ARG_OBJECT);
+        reservations = (ArrayList<Reservation>) args.getSerializable(ARG_OBJECT_ARRAY);
+        receivedInt = args.getInt(ARG_OBJECT_DAY);
+        setDayOfWeek(receivedInt);
         for(Reservation r : reservations){
             if(r.getMinute() == 0){
                 reservationsHourFull.add((r.getHour()));
@@ -57,6 +60,32 @@ public class TimeListFragment extends Fragment implements TimeReservationListRec
         }
         fillList(view);
         return view;
+    }
+
+    private void setDayOfWeek(int receivedInt){
+        switch(receivedInt) {
+            case 0:
+                dayOfWeek = "MONDAY";
+                break;
+            case 1:
+                dayOfWeek = "TUESDAY";
+                break;
+            case 2:
+                dayOfWeek = "WEDNESDAY";
+                break;
+            case 3:
+                dayOfWeek = "THURSDAY";
+                break;
+            case 4:
+                dayOfWeek = "FRIDAY";
+                break;
+            case 5:
+                dayOfWeek = "SATURDAY";
+                break;
+            case 6:
+                dayOfWeek = "SUNDAY";
+                break;
+        }
     }
 
     private void fillList(View view){
@@ -94,36 +123,7 @@ public class TimeListFragment extends Fragment implements TimeReservationListRec
     public void onItemClick(View view, int position) {
         if(view.getId() == R.id.buttonReserveTime){
             //Toast.makeText(getContext(), "You clicked " + adapter.getHour(position) + " " + adapter.getMinute(position), Toast.LENGTH_SHORT).show();
-            switch(receivedInt) {
-                case 1:
-                    reservationViewModel.makeReservation(DayOfWeek.MONDAY,
-                            Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
-                    break;
-                case 2:
-                    reservationViewModel.makeReservation(DayOfWeek.TUESDAY,
-                            Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
-                    break;
-                case 3:
-                    reservationViewModel.makeReservation(DayOfWeek.WEDNESDAY,
-                            Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
-                    break;
-                case 4:
-                    reservationViewModel.makeReservation(DayOfWeek.THURSDAY,
-                            Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
-                    break;
-                case 5:
-                    reservationViewModel.makeReservation(DayOfWeek.FRIDAY,
-                            Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
-                    break;
-                case 6:
-                    reservationViewModel.makeReservation(DayOfWeek.SATURDAY,
-                            Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
-                    break;
-                case 7:
-                    reservationViewModel.makeReservation(DayOfWeek.SUNDAY,
-                            Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
-                    break;
-            }
+            reservationViewModel.makeReservation(dayOfWeek, Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
         }
     }
 }

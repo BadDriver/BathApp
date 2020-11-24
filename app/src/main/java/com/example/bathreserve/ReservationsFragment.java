@@ -30,6 +30,7 @@ import java.io.Serializable;
 import java.sql.Time;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ReservationsFragment extends Fragment {
@@ -101,6 +102,31 @@ public class ReservationsFragment extends Fragment {
         demoCollectionAdapter = new DemoCollectionAdapter(this);
         viewPager = view.findViewById(R.id.viewPager);
         viewPager.setAdapter(demoCollectionAdapter);
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        switch (day) {
+            case Calendar.MONDAY:
+                viewPager.setCurrentItem(0);
+                break;
+            case Calendar.TUESDAY:
+                viewPager.setCurrentItem(1);
+                break;
+            case Calendar.WEDNESDAY:
+                viewPager.setCurrentItem(2);
+                break;
+            case Calendar.THURSDAY:
+                viewPager.setCurrentItem(3);
+                break;
+            case Calendar.FRIDAY:
+                viewPager.setCurrentItem(4);
+                break;
+            case Calendar.SATURDAY:
+                viewPager.setCurrentItem(5);
+                break;
+            case Calendar.SUNDAY:
+                viewPager.setCurrentItem(6);
+                break;
+        }
         tabLayout = view.findViewById(R.id.tabLayout);
         new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -144,25 +170,32 @@ public class ReservationsFragment extends Fragment {
             Bundle args = new Bundle();
             switch(position) {
                 case 0:
-                    args.putSerializable(TimeListFragment.ARG_OBJECT, (Serializable) reservationsMonday);
+                    args.putSerializable(TimeListFragment.ARG_OBJECT_ARRAY, (Serializable) reservationsMonday);
+                    args.putInt(TimeListFragment.ARG_OBJECT_DAY, 0);
                     break;
                 case 1:
-                    args.putSerializable(TimeListFragment.ARG_OBJECT, (Serializable) reservationsTuesday);
+                    args.putSerializable(TimeListFragment.ARG_OBJECT_ARRAY, (Serializable) reservationsTuesday);
+                    args.putInt(TimeListFragment.ARG_OBJECT_DAY, 1);
                     break;
                 case 2:
-                    args.putSerializable(TimeListFragment.ARG_OBJECT, (Serializable) reservationsWednesday);
+                    args.putSerializable(TimeListFragment.ARG_OBJECT_ARRAY, (Serializable) reservationsWednesday);
+                    args.putInt(TimeListFragment.ARG_OBJECT_DAY, 2);
                     break;
                 case 3:
-                    args.putSerializable(TimeListFragment.ARG_OBJECT, (Serializable) reservationsThursday);
+                    args.putSerializable(TimeListFragment.ARG_OBJECT_ARRAY, (Serializable) reservationsThursday);
+                    args.putInt(TimeListFragment.ARG_OBJECT_DAY, 3);
                     break;
                 case 4:
-                    args.putSerializable(TimeListFragment.ARG_OBJECT, (Serializable) reservationsFriday);
+                    args.putSerializable(TimeListFragment.ARG_OBJECT_ARRAY, (Serializable) reservationsFriday);
+                    args.putInt(TimeListFragment.ARG_OBJECT_DAY, 4);
                     break;
                 case 5:
-                    args.putSerializable(TimeListFragment.ARG_OBJECT, (Serializable) reservationsSaturday);
+                    args.putSerializable(TimeListFragment.ARG_OBJECT_ARRAY, (Serializable) reservationsSaturday);
+                    args.putInt(TimeListFragment.ARG_OBJECT_DAY, 5);
                     break;
                 case 6:
-                    args.putSerializable(TimeListFragment.ARG_OBJECT, (Serializable) reservationsSunday);
+                    args.putSerializable(TimeListFragment.ARG_OBJECT_ARRAY, (Serializable) reservationsSunday);
+                    args.putInt(TimeListFragment.ARG_OBJECT_DAY, 6);
                     break;
             }
             fragment.setArguments(args);

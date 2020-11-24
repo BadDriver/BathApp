@@ -34,7 +34,7 @@ public class ReservationRepository {
         return reservationsListLiveData;
     }
 
-    public void makeReservation(DayOfWeek dayOfWeek, int hour, int minute, Boolean repeat){
+    public void makeReservation(String dayOfWeek, int hour, int minute, Boolean repeat){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseReferenceHouse = database.getReference("users");
         ValueEventListener valueEventListener = new ValueEventListener() {
@@ -49,6 +49,7 @@ public class ReservationRepository {
                         databaseReferenceReservation.child(houseId).child(reservationKey).child("day").setValue(dayOfWeek);
                         databaseReferenceReservation.child(houseId).child(reservationKey).child("hour").setValue(hour);
                         databaseReferenceReservation.child(houseId).child(reservationKey).child("minute").setValue(minute);
+                        fetchReservations();
                         break;
                     }
                 }

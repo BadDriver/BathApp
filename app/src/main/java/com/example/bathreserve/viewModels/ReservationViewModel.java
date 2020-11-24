@@ -27,7 +27,7 @@ public class ReservationViewModel extends AndroidViewModel {
         return reservationsListLiveData;
     }
 
-    public void makeReservation(DayOfWeek dayOfWeek, int hour, int minute, Boolean repeat){
+    public void makeReservation(String dayOfWeek, int hour, int minute, Boolean repeat){
         reservationRepository.makeReservation(dayOfWeek, hour, minute, repeat);
     }
 
