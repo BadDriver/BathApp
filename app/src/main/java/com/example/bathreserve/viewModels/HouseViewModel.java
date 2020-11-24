@@ -43,4 +43,8 @@ public class HouseViewModel extends AndroidViewModel {
     public void getHouseInfo(){
         houseRepository.getHouseInfo();
     }
+
+    public void changeHouseName(String newName){
+        houseRepository.changeHouseName(newName);
+    }
 }

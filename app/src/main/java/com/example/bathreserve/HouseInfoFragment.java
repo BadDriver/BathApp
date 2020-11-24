@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,9 @@ import java.util.List;
 public class HouseInfoFragment extends Fragment implements View.OnClickListener, HouseUserListRecyclerViewAdapter.ItemClickListener {
     private HouseUserListRecyclerViewAdapter adapter;
     private TextView textViewHouseInfoName;
+    private EditText editTextChangeTitle;
+    private ImageView imageViewEditTitle;
+    private ImageView imageViewSaveTitle;
     private HouseViewModel houseViewModel;
     private RecyclerView recyclerView;
     private List<String> userList;
@@ -37,6 +42,8 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         houseViewModel.getHouseInfo();
         getHouseName();
         getUserListNames();
+        imageViewEditTitle.setOnClickListener(this);
+        imageViewSaveTitle.setOnClickListener(this);
         return view;
     }
 
@@ -45,6 +52,9 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         // set up the RecyclerView
         recyclerView = view.findViewById(R.id.recylerViewHouseUsers);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        editTextChangeTitle = view.findViewById(R.id.editTextChangeTitle);
+        imageViewEditTitle = view.findViewById(R.id.imageViewEditTitle);
+        imageViewSaveTitle = view.findViewById(R.id.imageViewSaveTitle);
     }
 
     private void getHouseName(){
@@ -75,7 +85,22 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.imageViewEditTitle:
+                textViewHouseInfoName.setVisibility(View.INVISIBLE);
+                imageViewEditTitle.setVisibility(View.INVISIBLE);
+                imageViewSaveTitle.setVisibility(View.VISIBLE);
+                editTextChangeTitle.setVisibility(View.VISIBLE);
+                editTextChangeTitle.requestFocus();
+                editTextChangeTitle.setText(textViewHouseInfoName.getText().toString());
+                break;
+            case R.id.imageViewSaveTitle:
+                houseViewModel.changeHouseName(editTextChangeTitle.getText().toString());
+                textViewHouseInfoName.setVisibility(View.VISIBLE);
+                imageViewEditTitle.setVisibility(View.VISIBLE);
+                imageViewSaveTitle.setVisibility(View.INVISIBLE);
+                editTextChangeTitle.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

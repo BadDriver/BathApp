@@ -21,6 +21,7 @@ public class HouseRepository {
     private MutableLiveData<String> houseNameLiveData;
     private ArrayList<String> usersListId;
     private MutableLiveData<List<String>> usersNameListLiveData;
+    private String houseId;
 
     public HouseRepository() {
         this.firebaseAuth = FirebaseAuth.getInstance();
@@ -89,6 +90,7 @@ public class HouseRepository {
                     }
                     if(usersListId.contains(firebaseAuth.getCurrentUser().getUid())){
                         houseNameLiveData.postValue(dataSnapshot.child("name").getValue().toString());
+                        houseId = dataSnapshot.getKey();
                         DatabaseReference databaseReferenceUserNames = database.getReference("users");
                         List<String> tempList = new ArrayList<>();
                         ValueEventListener valueEventListenerUserName = new ValueEventListener() {
@@ -119,5 +121,13 @@ public class HouseRepository {
             }
         };
         databaseReference.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    /**Because this method will be always called after getHouseInfo, the  string houseId will be always filled with the fetched house id */
+    public void changeHouseName(String newName){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReferenceHouse = database.getReference("houses");
+        databaseReferenceHouse.child(houseId).child("name").setValue(newName);
+        houseNameLiveData.postValue(newName);
     }
 }
