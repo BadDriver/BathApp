@@ -22,6 +22,7 @@ public class HouseRepository {
     private ArrayList<String> usersListId;
     private MutableLiveData<List<String>> usersNameListLiveData;
     private String houseId;
+    private String userId;
 
     public HouseRepository() {
         this.firebaseAuth = FirebaseAuth.getInstance();
@@ -129,5 +130,48 @@ public class HouseRepository {
         DatabaseReference databaseReferenceHouse = database.getReference("houses");
         databaseReferenceHouse.child(houseId).child("name").setValue(newName);
         houseNameLiveData.postValue(newName);
+    }
+
+    public void addUser(String email){
+        List<String> tempList = new ArrayList<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = database.getReference("users");
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    if(dataSnapshot.child("email").getValue().toString().equals(email)){
+                        userId = dataSnapshot.getKey();
+                        databaseReference.child(dataSnapshot.getKey()).child("house").setValue(houseId);
+                        DatabaseReference databaseReferenceHouse = database.getReference("houses");
+                        ValueEventListener valueEventListenerHouse = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot dataSnapshotHouse : snapshot.getChildren()){
+                                    if(dataSnapshotHouse.getKey().equals(houseId)){
+                                        for(DataSnapshot usersToAdd : dataSnapshotHouse.child("users").getChildren()){
+                                            tempList.add(usersToAdd.getValue().toString());
+                                        }
+                                        tempList.add(userId);
+                                        break;
+                                    }
+                                }
+                                databaseReferenceHouse.child(houseId).child("users").setValue(tempList);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        };databaseReferenceHouse.addListenerForSingleValueEvent(valueEventListenerHouse);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };databaseReference.addListenerForSingleValueEvent(valueEventListener);
     }
 }

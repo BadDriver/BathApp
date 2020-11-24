@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,9 +27,10 @@ import java.util.List;
 public class HouseInfoFragment extends Fragment implements View.OnClickListener, HouseUserListRecyclerViewAdapter.ItemClickListener {
     private HouseUserListRecyclerViewAdapter adapter;
     private TextView textViewHouseInfoName;
-    private EditText editTextChangeTitle;
+    private EditText editTextChangeTitle, editTextAddUser;
     private ImageView imageViewEditTitle;
     private ImageView imageViewSaveTitle;
+    private Button buttonAddUser;
     private HouseViewModel houseViewModel;
     private RecyclerView recyclerView;
     private List<String> userList;
@@ -44,6 +46,7 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         getUserListNames();
         imageViewEditTitle.setOnClickListener(this);
         imageViewSaveTitle.setOnClickListener(this);
+        buttonAddUser.setOnClickListener(this);
         return view;
     }
 
@@ -55,6 +58,8 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         editTextChangeTitle = view.findViewById(R.id.editTextChangeTitle);
         imageViewEditTitle = view.findViewById(R.id.imageViewEditTitle);
         imageViewSaveTitle = view.findViewById(R.id.imageViewSaveTitle);
+        buttonAddUser = view.findViewById(R.id.buttonAddUser);
+        editTextAddUser = view.findViewById(R.id.editTextAddUser);
     }
 
     private void getHouseName(){
@@ -100,6 +105,10 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
                 imageViewEditTitle.setVisibility(View.VISIBLE);
                 imageViewSaveTitle.setVisibility(View.INVISIBLE);
                 editTextChangeTitle.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.buttonAddUser:
+                houseViewModel.addUser(editTextAddUser.getText().toString());
+                break;
         }
     }
 
