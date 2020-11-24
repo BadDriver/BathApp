@@ -21,6 +21,7 @@ public class HouseRepository {
     private MutableLiveData<String> houseNameLiveData;
     private ArrayList<String> usersListId;
     private MutableLiveData<List<String>> usersNameListLiveData;
+    private MutableLiveData<List<String>> allUsersEmailLiveData;
     private String houseId;
     private String userId;
 
@@ -28,6 +29,7 @@ public class HouseRepository {
         this.firebaseAuth = FirebaseAuth.getInstance();
         this.houseNameLiveData = new MutableLiveData<>();
         this.usersNameListLiveData = new MutableLiveData<>();
+        this.allUsersEmailLiveData = new MutableLiveData<>();
     }
 
     public MutableLiveData<String> getHouseNameLiveData() {
@@ -36,6 +38,10 @@ public class HouseRepository {
 
     public MutableLiveData<List<String>> getUsersNameListLiveData() {
         return usersNameListLiveData;
+    }
+
+    public MutableLiveData<List<String>> getAllUsersEmailLiveData() {
+        return allUsersEmailLiveData;
     }
 
     /**Adds a house with a choosen name and the logged in user as a part of it */
@@ -166,6 +172,26 @@ public class HouseRepository {
                         };databaseReferenceHouse.addListenerForSingleValueEvent(valueEventListenerHouse);
                     }
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };databaseReference.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public void getAllUsersEmail(){
+        ArrayList<String> temp = new ArrayList();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = database.getReference("users");
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    temp.add(dataSnapshot.child("email").getValue().toString());
+                }
+                allUsersEmailLiveData.postValue(temp);
             }
 
             @Override

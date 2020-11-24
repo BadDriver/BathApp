@@ -63,6 +63,8 @@ public class ReservationsFragment extends Fragment {
         return view;
     }
 
+
+
     //inside here, also loadViewObjects() it's called so the viewPage adapter is shown only after the data was fetched
     private void fillReservations(View view){
         reservationViewModel.getReservationsListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Reservation>>() {

@@ -72,6 +72,7 @@ public class ReservationRepository {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
                         houseId = dataSnapshot.child("house").getValue().toString();
+                        Log.d("poloz", houseId);
                         break;
                     }
                 }
@@ -89,7 +90,6 @@ public class ReservationRepository {
                                     int minute = Integer.parseInt(String.valueOf(dataSnapshotReservations.child("minute").getValue()));
                                     String userId = firebaseAuth.getCurrentUser().getUid();
                                     Reservation reservation = new Reservation(dayOfWeek, hour, minute, userId);
-                                    Log.d("sloboz", reservation.toString());
                                     tempList.add(reservation);
                                 }
                                 reservationsListLiveData.postValue(tempList);

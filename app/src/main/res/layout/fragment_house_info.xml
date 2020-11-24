@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextAddUser" />
+        app:layout_constraintTop_toBottomOf="@+id/autoCompleteAddUser" />
 
     <EditText
         android:id="@+id/editTextChangeTitle"
@@ -65,15 +65,13 @@
         app:layout_constraintTop_toTopOf="@+id/editTextChangeTitle"
         app:srcCompat="@drawable/baseline_save_black_18dp" />
 
-    <EditText
-        android:id="@+id/editTextAddUser"
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteAddUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textPersonName"
+        android:hint="Search by email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewHouseInfoName" />
 
@@ -82,8 +80,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextAddUser"
+        app:layout_constraintBottom_toBottomOf="@+id/autoCompleteAddUser"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editTextAddUser" />
+        app:layout_constraintTop_toTopOf="@+id/autoCompleteAddUser" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

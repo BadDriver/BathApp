@@ -1,9 +1,12 @@
 package com.example.bathreserve;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,13 +30,15 @@ import java.util.List;
 public class HouseInfoFragment extends Fragment implements View.OnClickListener, HouseUserListRecyclerViewAdapter.ItemClickListener {
     private HouseUserListRecyclerViewAdapter adapter;
     private TextView textViewHouseInfoName;
-    private EditText editTextChangeTitle, editTextAddUser;
+    private EditText editTextChangeTitle;
+    private AutoCompleteTextView autoCompleteAddUser;
     private ImageView imageViewEditTitle;
     private ImageView imageViewSaveTitle;
     private Button buttonAddUser;
     private HouseViewModel houseViewModel;
     private RecyclerView recyclerView;
     private List<String> userList;
+    private ArrayList<String> allUsersEmail = new ArrayList<>();
 
     @Nullable
     @Override
@@ -47,6 +52,8 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         imageViewEditTitle.setOnClickListener(this);
         imageViewSaveTitle.setOnClickListener(this);
         buttonAddUser.setOnClickListener(this);
+        houseViewModel.getAllUsers();
+        getAllUsersEmail();
         return view;
     }
 
@@ -59,7 +66,7 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         imageViewEditTitle = view.findViewById(R.id.imageViewEditTitle);
         imageViewSaveTitle = view.findViewById(R.id.imageViewSaveTitle);
         buttonAddUser = view.findViewById(R.id.buttonAddUser);
-        editTextAddUser = view.findViewById(R.id.editTextAddUser);
+        autoCompleteAddUser = view.findViewById(R.id.autoCompleteAddUser);
     }
 
     private void getHouseName(){
@@ -88,6 +95,19 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         });
     }
 
+    private void getAllUsersEmail(){
+        houseViewModel.getAllUsersEmailLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> strings) {
+                for(String s : strings){
+                    allUsersEmail.add(s);
+                }
+            }
+        });
+        autoCompleteAddUser.setAdapter(new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_list_item_1, allUsersEmail));
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -107,7 +127,7 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
                 editTextChangeTitle.setVisibility(View.INVISIBLE);
                 break;
             case R.id.buttonAddUser:
-                houseViewModel.addUser(editTextAddUser.getText().toString());
+                houseViewModel.addUser(autoCompleteAddUser.getText().toString());
                 break;
         }
     }
