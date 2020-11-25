@@ -8,12 +8,14 @@ public class Reservation implements Serializable {
     private int hour;
     private int minute;
     private String userId;
+    private String userName;
 
-    public Reservation(String dayOfWeek, int hour, int minute, String userId) {
+    public Reservation(String dayOfWeek, int hour, int minute, String userId, String userName) {
         this.dayOfWeek = dayOfWeek;
         this.hour = hour;
         this.minute = minute;
         this.userId = userId;
+        this.userName = userName;
     }
 
     public String getDayOfWeek() {
@@ -32,13 +34,18 @@ public class Reservation implements Serializable {
         return userId;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
     @Override
     public String toString() {
         return "Reservation{" +
-                "dayOfWeek=" + dayOfWeek +
+                "dayOfWeek='" + dayOfWeek + '\'' +
                 ", hour=" + hour +
                 ", minute=" + minute +
                 ", userId='" + userId + '\'' +
+                ", userName='" + userName + '\'' +
                 '}';
     }
 }

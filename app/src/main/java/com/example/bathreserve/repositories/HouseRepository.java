@@ -198,7 +198,7 @@ public class HouseRepository {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        };//databaseReference.addListenerForSingleValueEvent(valueEventListener);
+        };databaseReference.addListenerForSingleValueEvent(valueEventListener);
     }
 
     public void leaveHouse(){

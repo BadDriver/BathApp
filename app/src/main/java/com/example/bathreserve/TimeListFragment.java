@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +39,9 @@ public class TimeListFragment extends Fragment implements TimeReservationListRec
     private ReservationViewModel reservationViewModel;
     private ArrayList<Reservation> reservations;
     private ArrayList<Integer> reservationsHourFull;
+    private ArrayList<String> reservationsNameFull;
     private ArrayList<Integer> reservationsHourHalf;
+    private ArrayList<String> reservationsNameHalf;
 
     @Nullable
     @Override
@@ -45,6 +49,8 @@ public class TimeListFragment extends Fragment implements TimeReservationListRec
         final View view = inflater.inflate(R.layout.fragment_time_list, container, false);
         reservationsHourFull = new ArrayList<>();
         reservationsHourHalf = new ArrayList<>();
+        reservationsNameFull = new ArrayList<>();
+        reservationsNameHalf = new ArrayList<>();
         reservationViewModel = new ViewModelProvider(getActivity()).get(ReservationViewModel.class);
         Bundle args = getArguments();
         reservations = (ArrayList<Reservation>) args.getSerializable(ARG_OBJECT_ARRAY);
@@ -53,9 +59,11 @@ public class TimeListFragment extends Fragment implements TimeReservationListRec
         for(Reservation r : reservations){
             if(r.getMinute() == 0){
                 reservationsHourFull.add((r.getHour()));
+                reservationsNameFull.add(r.getUserName());
             }
             else{
                 reservationsHourHalf.add(r.getHour());
+                reservationsNameHalf.add(r.getUserName());
             }
         }
         fillList(view);
@@ -63,6 +71,7 @@ public class TimeListFragment extends Fragment implements TimeReservationListRec
     }
 
     private void setDayOfWeek(int receivedInt){
+
         switch(receivedInt) {
             case 0:
                 dayOfWeek = "MONDAY";
@@ -91,38 +100,48 @@ public class TimeListFragment extends Fragment implements TimeReservationListRec
     private void fillList(View view){
         List hours = new ArrayList<String>();
         List minutes = new ArrayList<String>();
+        List userNames = new ArrayList<String>();
         for(int i = 0; i <= 23; i++){
-            if(!reservationsHourFull.contains(i)){
-                if(i<10){
-                    hours.add("0"+i);
-                }
-                else{
-                    hours.add(i+"");
-                }
-                minutes.add(0+"0");
+            if(i<10){
+                hours.add("0"+i);
             }
-            if(!reservationsHourHalf.contains(i)){
-                if(i<10){
-                    hours.add("0"+i);
-                }
-                else{
-                    hours.add(i+"");
-                }
-                minutes.add(30+"");
+            else{
+                hours.add(i+"");
+            }
+            minutes.add(0+"0");
+            if(i<10){
+                hours.add("0"+i);
+            }
+            else{
+                hours.add(i+"");
+            }
+            minutes.add(30+"");
+            if(reservationsHourFull.contains(i)){
+                userNames.add(reservationsNameFull.get(0));
+                reservationsNameFull.remove(0);
+            }
+            else{
+                userNames.add("");
+            }
+            if(reservationsHourHalf.contains(i)){
+                userNames.add(reservationsNameHalf.get(0));
+                reservationsNameHalf.remove(0);
+            }
+            else{
+                userNames.add("");
             }
         }
         recyclerViewTimeList = view.findViewById(R.id.recyclerViewReservationTimes);
         recyclerViewTimeList.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TimeReservationListRecylerViewAdapter(getContext(), hours, minutes);
+        adapter = new TimeReservationListRecylerViewAdapter(getContext(), hours, minutes, userNames);
         adapter.setClickListener(this);
         recyclerViewTimeList.setAdapter(adapter);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onItemClick(View view, int position) {
         if(view.getId() == R.id.buttonReserveTime){
-            //Toast.makeText(getContext(), "You clicked " + adapter.getHour(position) + " " + adapter.getMinute(position), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "You clicked " + adapter.getHour(position) + " " + adapter.getMinute(position), Toast.LENGTH_SHORT).show();
             reservationViewModel.makeReservation(dayOfWeek, Integer.parseInt(adapter.getHour(position)), Integer.parseInt(adapter.getMinute(position)), false);
         }
     }

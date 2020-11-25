@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">#A8A8A8</item>
+        <item name="colorPrimaryDark">#F1F1F1</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+</resources>

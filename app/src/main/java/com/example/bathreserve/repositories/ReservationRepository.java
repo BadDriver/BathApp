@@ -23,6 +23,7 @@ import java.util.List;
 public class ReservationRepository {
     private FirebaseAuth firebaseAuth;
     private String houseId;
+    private String userName;
     private MutableLiveData<List<Reservation>> reservationsListLiveData;
 
     public ReservationRepository() {
@@ -43,9 +44,11 @@ public class ReservationRepository {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())){
                         houseId = dataSnapshot.child("house").getValue().toString();
+                        userName = dataSnapshot.child("name").getValue().toString();
                         DatabaseReference databaseReferenceReservation = database.getReference("reservations");
                         String reservationKey = databaseReferenceReservation.push().getKey();
                         databaseReferenceReservation.child(houseId).child(reservationKey).child("userId").setValue(firebaseAuth.getCurrentUser().getUid());
+                        databaseReferenceReservation.child(houseId).child(reservationKey).child("userName").setValue(userName);
                         databaseReferenceReservation.child(houseId).child(reservationKey).child("day").setValue(dayOfWeek);
                         databaseReferenceReservation.child(houseId).child(reservationKey).child("hour").setValue(hour);
                         databaseReferenceReservation.child(houseId).child(reservationKey).child("minute").setValue(minute);
@@ -64,6 +67,7 @@ public class ReservationRepository {
     }
 
     public void fetchReservations(){
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseReferenceHouse = database.getReference("users");
         ValueEventListener valueEventListener = new ValueEventListener() {
@@ -72,7 +76,6 @@ public class ReservationRepository {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
                         houseId = dataSnapshot.child("house").getValue().toString();
-                        Log.d("poloz", houseId);
                         break;
                     }
                 }
@@ -89,7 +92,8 @@ public class ReservationRepository {
                                     int hour = Integer.parseInt(String.valueOf(dataSnapshotReservations.child("hour").getValue()));
                                     int minute = Integer.parseInt(String.valueOf(dataSnapshotReservations.child("minute").getValue()));
                                     String userId = firebaseAuth.getCurrentUser().getUid();
-                                    Reservation reservation = new Reservation(dayOfWeek, hour, minute, userId);
+                                    String userName = dataSnapshotReservations.child("userName").getValue().toString();
+                                    Reservation reservation = new Reservation(dayOfWeek, hour, minute, userId, userName);
                                     tempList.add(reservation);
                                 }
                                 reservationsListLiveData.postValue(tempList);

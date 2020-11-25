@@ -95,41 +95,40 @@ public class ReservationsFragment extends Fragment {
                             break;
                     }
                 }
-                //loadViewObjects(view);
+                loadViewObjects(view);
             }
         });
-        loadViewObjects(view);
     }
 
     private void loadViewObjects(View view){
         demoCollectionAdapter = new DemoCollectionAdapter(this);
         viewPager = view.findViewById(R.id.viewPager);
         viewPager.setAdapter(demoCollectionAdapter);
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        switch (day) {
-            case Calendar.MONDAY:
-                viewPager.setCurrentItem(0);
-                break;
-            case Calendar.TUESDAY:
-                viewPager.setCurrentItem(1);
-                break;
-            case Calendar.WEDNESDAY:
-                viewPager.setCurrentItem(2);
-                break;
-            case Calendar.THURSDAY:
-                viewPager.setCurrentItem(3);
-                break;
-            case Calendar.FRIDAY:
-                viewPager.setCurrentItem(4);
-                break;
-            case Calendar.SATURDAY:
-                viewPager.setCurrentItem(5);
-                break;
-            case Calendar.SUNDAY:
-                viewPager.setCurrentItem(6);
-                break;
-        }
+//        Calendar calendar = Calendar.getInstance();
+//        int day = calendar.get(Calendar.DAY_OF_WEEK);
+//        switch (day) {
+//            case Calendar.MONDAY:
+//                viewPager.setCurrentItem(0);
+//                break;
+//            case Calendar.TUESDAY:
+//                viewPager.setCurrentItem(1);
+//                break;
+//            case Calendar.WEDNESDAY:
+//                viewPager.setCurrentItem(2);
+//                break;
+//            case Calendar.THURSDAY:
+//                viewPager.setCurrentItem(3);
+//                break;
+//            case Calendar.FRIDAY:
+//                viewPager.setCurrentItem(4);
+//                break;
+//            case Calendar.SATURDAY:
+//                viewPager.setCurrentItem(5);
+//                break;
+//            case Calendar.SUNDAY:
+//                viewPager.setCurrentItem(6);
+//                break;
+//        }
         tabLayout = view.findViewById(R.id.tabLayout);
         new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
