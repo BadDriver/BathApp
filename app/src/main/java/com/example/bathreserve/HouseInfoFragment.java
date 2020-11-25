@@ -1,7 +1,6 @@
 package com.example.bathreserve;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,7 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
     private AutoCompleteTextView autoCompleteAddUser;
     private ImageView imageViewEditTitle;
     private ImageView imageViewSaveTitle;
-    private Button buttonAddUser;
+    private Button buttonAddUser, buttonLeaveHouse;
     private HouseViewModel houseViewModel;
     private RecyclerView recyclerView;
     private List<String> userList;
@@ -52,6 +51,7 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         imageViewEditTitle.setOnClickListener(this);
         imageViewSaveTitle.setOnClickListener(this);
         buttonAddUser.setOnClickListener(this);
+        buttonLeaveHouse.setOnClickListener(this);
         houseViewModel.getAllUsers();
         getAllUsersEmail();
         return view;
@@ -66,6 +66,7 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
         imageViewEditTitle = view.findViewById(R.id.imageViewEditTitle);
         imageViewSaveTitle = view.findViewById(R.id.imageViewSaveTitle);
         buttonAddUser = view.findViewById(R.id.buttonAddUser);
+        buttonLeaveHouse = view.findViewById(R.id.buttonLeaveHouse);
         autoCompleteAddUser = view.findViewById(R.id.autoCompleteAddUser);
     }
 
@@ -128,6 +129,10 @@ public class HouseInfoFragment extends Fragment implements View.OnClickListener,
                 break;
             case R.id.buttonAddUser:
                 houseViewModel.addUser(autoCompleteAddUser.getText().toString());
+                break;
+            case R.id.buttonLeaveHouse:
+                houseViewModel.leaveHouse();
+                ((MainActivity)getActivity()).leaveHouse();
                 break;
         }
     }

@@ -134,4 +134,8 @@ public class AccountRepository {
         };
         myRef.addValueEventListener(valueEventListener);
     }
+
+    public void userLeaveHouse(){
+        ownHouseLiveData.postValue(false);
+    }
 }

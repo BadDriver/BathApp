@@ -198,6 +198,75 @@ public class HouseRepository {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        };databaseReference.addListenerForSingleValueEvent(valueEventListener);
+        };//databaseReference.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public void leaveHouse(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //remove the user from user list
+        DatabaseReference databaseReferenceUsers = database.getReference("users");
+        ValueEventListener valueEventListenerUsers = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())){
+                        databaseReferenceUsers.child(dataSnapshot.getKey()).child("house").removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };databaseReferenceUsers.addListenerForSingleValueEvent(valueEventListenerUsers);
+        //remove the user from the house user list
+        List<String> tempList = new ArrayList<>();
+        DatabaseReference databaseReferenceHouse = database.getReference("houses");
+        ValueEventListener valueEventListenerHouse = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshotHouse : snapshot.getChildren()){
+                    if(dataSnapshotHouse.getKey().equals(houseId)){
+                        for(DataSnapshot usersToAdd : dataSnapshotHouse.child("users").getChildren()){
+                            if(!usersToAdd.getValue().toString().equals(firebaseAuth.getCurrentUser().getUid())){
+                                tempList.add(usersToAdd.getValue().toString());
+                            }
+                        }
+                        break;
+                    }
+                }
+                databaseReferenceHouse.child(houseId).child("users").setValue(tempList);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };databaseReferenceHouse.addListenerForSingleValueEvent(valueEventListenerHouse);
+        //remove users reservations
+        ArrayList<String> keysToRemove = new ArrayList<>();
+        DatabaseReference databaseReferenceReservations = database.getReference("reservations");
+        ValueEventListener valueEventListenerReservations = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    if(dataSnapshot.getKey().equals(houseId)){
+                        for(DataSnapshot dataSnapshotReservations : dataSnapshot.getChildren()){
+                            if(dataSnapshotReservations.child("userId").getValue().equals(firebaseAuth.getCurrentUser().getUid())){
+                                keysToRemove.add(dataSnapshotReservations.getKey());
+                            }
+                        }
+                        break;
+                    }
+                }
+                for(String s : keysToRemove){
+                    databaseReferenceReservations.child(houseId).child(s).removeValue();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };databaseReferenceReservations.addListenerForSingleValueEvent(valueEventListenerReservations);
     }
 }

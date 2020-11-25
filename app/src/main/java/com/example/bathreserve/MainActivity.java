@@ -114,4 +114,8 @@ public class MainActivity extends AppCompatActivity {
         }
         fragmentTransaction.commit();
     }
+
+    public void leaveHouse(){
+        accountViewModel.leaveHouse();
+    }
 }

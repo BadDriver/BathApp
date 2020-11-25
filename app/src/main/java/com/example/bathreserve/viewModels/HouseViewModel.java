@@ -59,4 +59,8 @@ public class HouseViewModel extends AndroidViewModel {
     public void addUser(String email){
         houseRepository.addUser(email);
     }
+
+    public void leaveHouse(){
+        houseRepository.leaveHouse();
+    }
 }

@@ -71,4 +71,8 @@ public class AccountViewModel extends AndroidViewModel {
     public void logOut() {
         accountRepository.logOut();
     }
+
+    public void leaveHouse(){
+        accountRepository.userLeaveHouse();
+    }
 }

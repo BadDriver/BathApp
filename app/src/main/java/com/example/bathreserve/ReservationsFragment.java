@@ -95,9 +95,10 @@ public class ReservationsFragment extends Fragment {
                             break;
                     }
                 }
-                loadViewObjects(view);
+                //loadViewObjects(view);
             }
         });
+        loadViewObjects(view);
     }
 
     private void loadViewObjects(View view){
