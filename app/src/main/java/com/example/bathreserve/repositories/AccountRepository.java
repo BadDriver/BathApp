@@ -27,6 +27,7 @@ public class AccountRepository {
     private MutableLiveData<FirebaseUser> userLiveData;
     private MutableLiveData<Boolean> loggedInLiveData;
     private MutableLiveData<Boolean> ownHouseLiveData;
+    private MutableLiveData<String> nameLiveData;
 
     public AccountRepository(Application application) {
         this.application = application;
@@ -34,6 +35,7 @@ public class AccountRepository {
         this.userLiveData = new MutableLiveData<>();
         this.loggedInLiveData = new MutableLiveData<>();
         this.ownHouseLiveData = new MutableLiveData<>();
+        this.nameLiveData = new MutableLiveData<>();
         /*
         AccountRepository object is created only once when the app is started
         so, here I check if the user is logged in; if he is logged in, it will check if he is part of a house
@@ -46,6 +48,10 @@ public class AccountRepository {
         else{
             loggedInLiveData.postValue(false);
         }
+    }
+
+    public MutableLiveData<String> getNameLiveData() {
+        return nameLiveData;
     }
 
     /**Get information about the current FireBaseUser */
@@ -82,6 +88,7 @@ public class AccountRepository {
                         }
                     }
                 });
+
     }
 
     /**After the user has logged in, it will give that FirebaseUser object to userLiveData
@@ -137,5 +144,53 @@ public class AccountRepository {
 
     public void userLeaveHouse(){
         ownHouseLiveData.postValue(false);
+    }
+
+    public void getUserName(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())){
+                        nameLiveData.postValue(dataSnapshot.child("name").getValue().toString());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        myRef.addValueEventListener(valueEventListener);
+    }
+
+    public void changeEmail(String email){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        user.updateEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(application.getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference myRef = database.getReference("users");
+                            myRef.child(firebaseAuth.getCurrentUser().getUid()).child("email").setValue(email);
+                        }
+                        else {
+                            Toast.makeText(application.getApplicationContext(), "Registration Failure: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    public void changeName(String name){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        myRef.child(firebaseAuth.getCurrentUser().getUid()).child("name").setValue(name);
     }
 }

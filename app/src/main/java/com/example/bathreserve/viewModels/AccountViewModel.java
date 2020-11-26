@@ -16,6 +16,7 @@ public class AccountViewModel extends AndroidViewModel {
     private MutableLiveData<FirebaseUser> userLiveData;
     private MutableLiveData<Boolean> loggedInLiveData;
     private MutableLiveData<Boolean> ownHouseLiveData;
+    private MutableLiveData<String> nameLiveData;
     private boolean ownHouse;
 
     public AccountViewModel(@NonNull Application application) {
@@ -24,6 +25,11 @@ public class AccountViewModel extends AndroidViewModel {
         this.userLiveData = accountRepository.getUserLiveData();
         this.loggedInLiveData = accountRepository.getLoggedInLiveData();
         this.ownHouseLiveData = accountRepository.getOwnHouseLiveData();
+        this.nameLiveData = accountRepository.getNameLiveData();
+    }
+
+    public MutableLiveData<String> getNameLiveData() {
+        return nameLiveData;
     }
 
     public MutableLiveData<FirebaseUser> getUserLiveData() {
@@ -74,5 +80,24 @@ public class AccountViewModel extends AndroidViewModel {
 
     public void leaveHouse(){
         accountRepository.userLeaveHouse();
+    }
+
+    public void getName(){
+        accountRepository.getUserName();
+    }
+
+    public void updateInfo(String email, String name){
+        if(email.trim().isEmpty()){
+            Toast.makeText(getApplication(), "Email can't be empty!", Toast.LENGTH_LONG).show();
+        }
+        else{
+            accountRepository.changeEmail(email);
+        }
+        if(name.trim().isEmpty()){
+            Toast.makeText(getApplication(), "Name can't be empty!", Toast.LENGTH_LONG).show();
+        }
+        else{
+            accountRepository.changeName(name);
+        }
     }
 }
